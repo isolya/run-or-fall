@@ -14,7 +14,18 @@ function start(x){
         document.getElementById('time').innerHTML="Поехали!";
         document.querySelector('.page#timer').classList.remove('active');
         document.querySelector('.page#main').classList.add('active');
-        generateField();
+        
+        let div = document.createElement("div")
+        div.classList.add("bigblock"); 
+        let style = div.style
+        style.gridColumnStart = 1;
+        style.gridColumnEnd = 2;
+        style.gridRowStart = 1;
+        style.gridRowEnd = 4;
+        document.getElementById("main").appendChild(div);
+
+
+        //generateField();
 
     }
     else{
