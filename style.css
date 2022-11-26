@@ -62,7 +62,7 @@ h1 {
 }
 .page#main{
   grid-template-columns: repeat(5, 1fr 2fr);
-  grid-template-rows:  repeat(5, 1fr 2fr );
+  grid-template-rows:  repeat(5, 1fr 2fr   );
   place-items: center;
   
 }
