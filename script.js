@@ -110,7 +110,7 @@ const render = () => {
         
           } else if (event.key == "ArrowLeft") {
         
-            if (c_active !== null && c_active !== 0 && c_active !== 10 && c_active !== 20 && c_active !== 30 && c_active !== 40 && c_active !== 50 && c_active !== 60 && c_active !== 70 && c_active !== 80 && c_active !== 90) {
+            if (c_active !== null && c_active %10>0) {
               
                 c[c_active].classList.remove('bigblock--active');
         
@@ -121,7 +121,7 @@ const render = () => {
         
           } else if (event.key == "ArrowUp") {
         
-            if (c_active !== null && c_active !== 0 && c_active !== 1 && c_active !== 2 && c_active !== 3 && c_active !== 4 && c_active !== 5 && c_active !== 6 && c_active !== 7 && c_active !== 8 && c_active !== 9) {
+            if (c_active !== null && c_active >9 ) {
                 c[c_active].classList.remove('bigblock--active');
         
                 c_active = c_active - 10;
@@ -131,7 +131,7 @@ const render = () => {
         
           } else if (event.key == "ArrowRight") {
         
-            if (c_active !== null && c_active !== 9 && c_active !== 19 && c_active !== 29 && c_active !== 39 && c_active !== 49 && c_active !== 59 && c_active !== 69 && c_active !== 79 && c_active !== 89 && c_active !== 99) {
+            if (c_active !== null && c_active %10<9) {
                 c[c_active].classList.remove('bigblock--active');
         
                 c_active = c_active + 1;
@@ -141,7 +141,7 @@ const render = () => {
         
           } else if (event.key == "ArrowDown") {
         
-            if (c_active !== null && c_active !== 90 && c_active !== 91 && c_active !== 92 && c_active !== 93 && c_active !== 94 && c_active !== 95 && c_active !== 96 && c_active !== 97 && c_active !== 98 && c_active !== 99) {
+            if (c_active !== null && c_active <90) {
                 c[c_active].classList.remove('bigblock--active');
         
               c_active = c_active + 10;
