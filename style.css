@@ -31,7 +31,7 @@ body {
   width: 10px;
   height: 10px;
 }
-.bigblock.is-duckling {
+.bigblock--active {
   background-color: rgb(219, 176, 56);
 }
 h1 {

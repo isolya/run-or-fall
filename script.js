@@ -81,23 +81,10 @@ function generateBridge(){
     })
     
 }
-function generateDuckling(){
-    const ducklingPoints = [
-        [1, 6],
-    ]
-
-    ducklingPoints.forEach(([columnIndex, rowIndex]) => {
-        state.cells[rowIndex * state.columnNumber + columnIndex].isDuckling = true;
-       
-    })
-    
-}
 const render = () => {
     
     state.cells.forEach((cell) => {
-      if  (cell.isDuckling ){
-        cell.element.classList.add('is-duckling');
-      }
+     
       if  (cell.isBridge ){
         cell.element.classList.add('is-bridge');
       }
@@ -106,10 +93,79 @@ const render = () => {
       }
       
     });
+   
+        let c = document.querySelectorAll('.bigblock');
+         let c_active = null;
+        
+        window.addEventListener('keydown', function(event) {
+          if (event.key == "Enter") {
+        
+            if (c_active !== null) {
+              c[c_active].classList.remove('bigblock--active,');
+            };
+        
+            c_active = 0;
+        
+            c[c_active].classList.add('bigblock--active');
+        
+          } else if (event.key == "ArrowLeft") {
+        
+            if (c_active !== null && c_active !== 0 && c_active !== 10 && c_active !== 20 && c_active !== 30 && c_active !== 40 && c_active !== 50 && c_active !== 60 && c_active !== 70 && c_active !== 80 && c_active !== 90) {
+              
+                c[c_active].classList.remove('bigblock--active');
+        
+                c_active = c_active - 1;
+        
+              c[c_active].classList.add('bigblock--active');
+            };
+        
+          } else if (event.key == "ArrowUp") {
+        
+            if (c_active !== null && c_active !== 0 && c_active !== 1 && c_active !== 2 && c_active !== 3 && c_active !== 4 && c_active !== 5 && c_active !== 6 && c_active !== 7 && c_active !== 8 && c_active !== 9) {
+                c[c_active].classList.remove('bigblock--active');
+        
+                c_active = c_active - 10;
+        
+              c[c_active].classList.add('bigblock--active');
+            };
+        
+          } else if (event.key == "ArrowRight") {
+        
+            if (c_active !== null && c_active !== 9 && c_active !== 19 && c_active !== 29 && c_active !== 39 && c_active !== 49 && c_active !== 59 && c_active !== 69 && c_active !== 79 && c_active !== 89 && c_active !== 99) {
+                c[c_active].classList.remove('bigblock--active');
+        
+                c_active = c_active + 1;
+        
+              c[c_active].classList.add('bigblock--active');
+            };
+        
+          } else if (event.key == "ArrowDown") {
+        
+            if (c_active !== null && c_active !== 90 && c_active !== 91 && c_active !== 92 && c_active !== 93 && c_active !== 94 && c_active !== 95 && c_active !== 96 && c_active !== 97 && c_active !== 98 && c_active !== 99) {
+                c[c_active].classList.remove('bigblock--active');
+        
+              c_active = c_active + 10;
+        
+              c[c_active].classList.add('bigblock--active');
+            };
+        
+          }
+        });
+       
+        // if(c_active==this.document.getElementsByClassName('bigblock is-bridge bigblock--active')){
+        //     c[c_active].classList.remove('bigblock is-bridge bigblock--active ');
+        //     c[c_active].classList.add('bigblock--active');
+        //   }
+        
+            
+          
+        
+        }
     
-}
+
   
 const tick = () => {
+    
     render();
     setTimeout(tick, 1000);
 }
@@ -120,7 +176,7 @@ const initListeners = () => {
 
 const startGame = () => {
     generateField();
-    generateDuckling();
+  
     generateBridge();
     generateCoins();
     mountField();
@@ -132,4 +188,4 @@ const main = () => {
 }
 
 main();
-//https://ru.stackoverflow.com/questions/641090/%D0%9F%D0%B5%D1%80%D0%B5%D0%BC%D0%B5%D1%89%D0%B5%D0%BD%D0%B8%D0%B5-%D0%BF%D0%BE-div%D0%B0%D0%BC-%D1%81-%D0%BF%D0%BE%D0%BC%D0%BE%D1%89%D1%8C%D1%8E-%D0%BA%D0%BD%D0%BE%D0%BF%D0%BE%D0%BA-%D0%BD%D0%B0-javascript
+/////////////////////////////////////////////////////////////////////
