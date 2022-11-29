@@ -19,20 +19,20 @@ body {
 .bigblock {
   width: 100%;
   height: 100%;
-  background-color: rgb(92, 59, 94);
+  
 }
 
 .bigblock.is-bridge {
-  background-color: red;
+  background-color: rgb(59, 0, 61);
 }
-
-#duckling{
-  background-color: rgb(158, 147, 96);
-  
-   height: 100%;
-   width: 100%;
-   cursor: pointer;
-   position: relative;
+.bigblock.is-coins {
+  background-color: rgb(221, 213, 188);
+  border-radius: 50%;
+  width: 10px;
+  height: 10px;
+}
+.bigblock.is-duckling {
+  background-color: rgb(219, 176, 56);
 }
 h1 {
 
