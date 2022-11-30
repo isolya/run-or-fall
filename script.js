@@ -14,14 +14,14 @@ const state = {
     columnNumber: 10,
     rowNumber: 10,
     cells: [],
-     direction:[0, 1],
-     duckCoord :{
-        c: 5,
-        r: 5
-    
+    direction: [0, 1],
+    duckCoord: {
+        c: 1,
+        r: 8
+
     }
 
-}; 
+};
 
 function start(x) {
     document.getElementById('time').innerHTML = x;
@@ -40,7 +40,7 @@ function start(x) {
 
 function creatDiv() {
     let div = document.createElement("div");
-    div.classList.add("bigblock")
+    div.classList.add("cell")
     return div
 }
 
@@ -77,9 +77,9 @@ function renderCoins() {
 function generateBridge() {
     const bridgePoints = [
         [2, 1], [3, 1], [4, 1], [5, 1], [6, 1], [7, 1], [1, 1], [1, 2], [1, 3], [1, 4], [1, 5], [1, 6],
-        [7, 2], [7, 3],[6,3],[5,3],[5,4],[5,5],[5,6],[5,7],[5,8],[5,9]
+        [7, 2], [7, 3], [6, 3], [5, 3], [5, 4], [5, 5], [5, 6], [5, 7], [5, 8], [5, 9]
     ]
-
+    
     bridgePoints.forEach(([columnIndex, rowIndex]) => {
         state.cells[rowIndex * state.columnNumber + columnIndex].isBridge = true;
 
@@ -96,32 +96,37 @@ const render = () => {
         if (cell.isCoins) {
             cell.element.classList.add('is-coins');
         }
-       
+
     });
-   
-    
+
+
 }
 
+function duckCurrent ()  {
+    return state.cells[state.duckCoord.r * 10 + state.duckCoord.c].element
+}
+const current = duckCurrent;
 const moveDuck = () => {
 
-    function duck() {
-        return state.cells[state.duckCoord.r * 10 + state.duckCoord.c].element
+     duckCurrent() ;
+    
+    if (state.duckCoord.c > 0 && state.duckCoord.c < 9 && state.duckCoord.r > 0 && state.duckCoord.r < 9) {
+        current().classList.remove('cell--active');
+        
+
+        state.duckCoord.r += state.direction[0]
+        state.duckCoord.c += state.direction[1]
+        current().classList.add('cell--active');
+        current().classList.remove('.cell.is-coins');
+        
     }
-    duck().classList.remove('bigblock--active');
-    duck().classList.add('bigblock--active');
-
-    state.duckCoord.r += state.direction[0]
-    state.duckCoord.c += state.direction[1]
-
-    duck().classList.remove('bigblock--active');
-    duck().classList.add('bigblock--active');
+    removeCoin();
 }
+
 const duckMovement = () => {
-    function duck() {
-        return state.cells[state.duckCoord.r * 10 + state.duckCoord.c].element
-    }
-    duck().classList.remove('bigblock--active');
-    duck().classList.add('bigblock--active');
+    duckCurrent() ;
+    
+    current().classList.add('cell--active');
 
     window.addEventListener('keydown', function (event) {
         switch (event.key) {
@@ -130,46 +135,62 @@ const duckMovement = () => {
             case 'ArrowLeft':
                 if (state.duckCoord.c > 0) {
 
-                    duck().classList.remove('bigblock--active');
+                    current().classList.remove('cell--active');
+                    
 
                     state.direction = [0, -1]
-
-                    duck().classList.add('bigblock--active');
+                    
+                    current().classList.add('cell--active');
+                    
                 };
                 break;
             case 'ArrowUp':
                 if (state.duckCoord.r > 0) {
-                    duck().classList.remove('bigblock--active');
+                    current().classList.remove('cell--active');
+                   
 
                     state.direction = [-1, 0]
 
-                    duck().classList.add('bigblock--active');
+                    current().classList.add('cell--active');
+                    
                 };
                 break;
             case 'ArrowRight':
                 if (state.duckCoord.c < 9) {
-                    duck().classList.remove('bigblock--active');
+                    current().classList.remove('cell--active');
+                    
 
                     state.direction = [0, 1]
 
 
-                    duck().classList.add('bigblock--active');
+                    current().classList.add('cell--active');
+                   
                 };
                 break;
             case 'ArrowDown':
-                if ( state.duckCoord.r < 9) {
-                    console.log(duck());
-                    duck().classList.remove('bigblock--active');
+                if (state.duckCoord.r < 9) {
 
-                    // state.duckCoord.r += 1;
+                    current().classList.remove('cell--active');
+                    
 
                     state.direction = [1, 0]
 
-                    duck().classList.add('bigblock--active');
+                    current().classList.add('cell--active');
+                   
                 };
                 break;
+            // case 'Enter':
+
+            //     break;
         }
-        let coinIndex = -1;
+
+        removeCoin();
+
+
+    });
+}
+const removeCoin = () =>{
+ let coinIndex = false;
         for (let index = 0; index < coinsPoints.length; index++) {
             const coin = coinsPoints[index];
             let coinR = coin[1];
@@ -180,35 +201,18 @@ const duckMovement = () => {
             }
 
         }
-        if (coinIndex !== -1) {
+        if (coinIndex ==true) {
             coinsPoints.splice(coinIndex, 1);
-            console.log('remove')
-            duck().classList.remove('is-coins')
+            console.log('remove');
+            current().classList.remove('is-coins');
         }
-
-
-    });
-}
-function go(){
-    function duck() {
-        return state.cells[state.duckCoord.r * 10 + state.duckCoord.c].element
     }
-    duck().classList.remove('bigblock--active');
-    duck().classList.add('bigblock--active');
-    if (state.duckCoord.r > 0) {
-        duck().classList.remove('bigblock--active');
-
-        // state.duckCoord.r -= 1;
-
-        duck().classList.add('bigblock--active');
-    };
-}
 
 const tick = () => {
-    console.log('tick')
-   moveDuck();
+    
+    moveDuck();
     render();
-   go();
+
     setTimeout(tick, 1000);
 }
 
