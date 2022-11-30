@@ -6,11 +6,7 @@ document.querySelector('div.start').addEventListener('click', () => {
 });
 
 let timer;
-let duckCoord = {
-    r: 0,
-    c: 0
 
-};
 const coinsPoints = [
     [5, 4], [5, 6], [5, 8], [5, 9], [5, 3]
 ]
@@ -18,8 +14,14 @@ const state = {
     columnNumber: 10,
     rowNumber: 10,
     cells: [],
+     direction:[0, 1],
+     duckCoord :{
+        c: 5,
+        r: 5
+    
+    }
 
-};
+}; 
 
 function start(x) {
     document.getElementById('time').innerHTML = x;
@@ -66,8 +68,6 @@ const mountField = () => {
     });
 }
 function renderCoins() {
-
-
     coinsPoints.forEach(([columnIndex, rowIndex]) => {
         state.cells[rowIndex * state.columnNumber + columnIndex].isCoins = true;
 
@@ -77,7 +77,7 @@ function renderCoins() {
 function generateBridge() {
     const bridgePoints = [
         [2, 1], [3, 1], [4, 1], [5, 1], [6, 1], [7, 1], [1, 1], [1, 2], [1, 3], [1, 4], [1, 5], [1, 6],
-        [7, 2], [7, 3],
+        [7, 2], [7, 3],[6,3],[5,3],[5,4],[5,5],[5,6],[5,7],[5,8],[5,9]
     ]
 
     bridgePoints.forEach(([columnIndex, rowIndex]) => {
@@ -96,22 +96,31 @@ const render = () => {
         if (cell.isCoins) {
             cell.element.classList.add('is-coins');
         }
-        
+       
     });
+   
     
+}
+
+const moveDuck = () => {
+
+    function duck() {
+        return state.cells[state.duckCoord.r * 10 + state.duckCoord.c].element
+    }
+    duck().classList.remove('bigblock--active');
+    duck().classList.add('bigblock--active');
+
+    state.duckCoord.r += state.direction[0]
+    state.duckCoord.c += state.direction[1]
+
+    duck().classList.remove('bigblock--active');
+    duck().classList.add('bigblock--active');
 }
 const duckMovement = () => {
     function duck() {
-        return state.cells[duckCoord.r * 10 + duckCoord.c].element
+        return state.cells[state.duckCoord.r * 10 + state.duckCoord.c].element
     }
-
-
-
     duck().classList.remove('bigblock--active');
-
-
-
-
     duck().classList.add('bigblock--active');
 
     window.addEventListener('keydown', function (event) {
@@ -119,38 +128,42 @@ const duckMovement = () => {
 
 
             case 'ArrowLeft':
-                if (duckCoord !== null && duckCoord.c > 0) {
+                if (state.duckCoord.c > 0) {
 
                     duck().classList.remove('bigblock--active');
 
-                    duckCoord.c -= 1;
+                    state.direction = [0, -1]
 
                     duck().classList.add('bigblock--active');
                 };
                 break;
             case 'ArrowUp':
-                if (duckCoord !== null && duckCoord.r > 0) {
+                if (state.duckCoord.r > 0) {
                     duck().classList.remove('bigblock--active');
 
-                    duckCoord.r -= 1;
+                    state.direction = [-1, 0]
 
                     duck().classList.add('bigblock--active');
                 };
                 break;
             case 'ArrowRight':
-                if (duckCoord !== null && duckCoord.c < 9) {
+                if (state.duckCoord.c < 9) {
                     duck().classList.remove('bigblock--active');
 
-                    duckCoord.c += 1;
+                    state.direction = [0, 1]
+
 
                     duck().classList.add('bigblock--active');
                 };
                 break;
             case 'ArrowDown':
-                if (duckCoord !== null && duckCoord.r < 9) {
+                if ( state.duckCoord.r < 9) {
+                    console.log(duck());
                     duck().classList.remove('bigblock--active');
 
-                    duckCoord.r += 1;
+                    // state.duckCoord.r += 1;
+
+                    state.direction = [1, 0]
 
                     duck().classList.add('bigblock--active');
                 };
@@ -161,7 +174,7 @@ const duckMovement = () => {
             const coin = coinsPoints[index];
             let coinR = coin[1];
             let coinC = coin[0];
-            if (duckCoord.r === coinR && duckCoord.c === coinC) {
+            if (state.duckCoord.r === coinR && state.duckCoord.c === coinC) {
                 coinIndex = true;
 
             }
@@ -176,12 +189,26 @@ const duckMovement = () => {
 
     });
 }
+function go(){
+    function duck() {
+        return state.cells[state.duckCoord.r * 10 + state.duckCoord.c].element
+    }
+    duck().classList.remove('bigblock--active');
+    duck().classList.add('bigblock--active');
+    if (state.duckCoord.r > 0) {
+        duck().classList.remove('bigblock--active');
 
+        // state.duckCoord.r -= 1;
 
+        duck().classList.add('bigblock--active');
+    };
+}
 
 const tick = () => {
-
+    console.log('tick')
+   moveDuck();
     render();
+   go();
     setTimeout(tick, 1000);
 }
 
@@ -203,4 +230,4 @@ const main = () => {
 }
 
 main();
-/////////////////////////////////////////////////////////////////////
+

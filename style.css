@@ -23,25 +23,46 @@ body {
 }
 
 .bigblock.is-bridge {
-  background-color: rgb(59, 0, 61);
+  background-color: rgb(36, 11, 36);
+  box-shadow:  5px 5px 5px 5px rgb(120, 58, 122), 0 0 10em #1b0529;
+              
+ 
 }
 .bigblock.is-coins {
-  background-color: rgb(221, 213, 188);
-  border-radius: 50%;
-  width: 10px;
-  height: 10px;
+  background-image: url('coin.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  width:100%;
+  height: 100%;
 }
 .bigblock--active {
-  background-color: rgb(219, 176, 56);
+  background-image:url('./duckling.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  width: 100%;
+  height: 100%;
 }
 .bigblock.is-bridge.bigblock--active{
-  background-color: rgb(219, 176, 56);
+  background-image:url('./duckling.png');
+   background-repeat: no-repeat;
+  width: 100%;
+  height: 100%;
+  background-position: center;
+  background-size: contain;
+
 }
 .bigblock.is-coins.bigblock--active{
-  background-color: rgb(219, 176, 56);
+  background: url('./duckling.png');
+  background-repeat: no-repeat;
   width: 100%;
-  height: 100%; 
+  height: 100%;
+  background-position: center;
+  background-size: contain;
+
 }
+
 h1 {
 
   font-size: 60px;
