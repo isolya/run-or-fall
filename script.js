@@ -4,20 +4,26 @@ document.querySelector('div.start').addEventListener('click', () => {
     document.querySelector('.page#timer').classList.add('active');
     start(3);
 });
+document.querySelector('div.restart').addEventListener('click', () => {
+    document.querySelector('.page#game-over').classList.remove('active');
+    document.querySelector('.page#main').classList.add('active');
 
+    start(3);
+});
 let timer;
 let score = 0;
+
 const coinsPoints = [
     [5, 3],
     [5, 4],
     [5, 6],
     [5, 8],
     [5, 9],
-    // [1, 1],
-    // [1, 2],
-    // [1, 3],
-    // [1, 4],
-    // [1, 5],
+    [1, 1],
+    [1, 2],
+    [1, 3],
+    [1, 4],
+    [1, 5],
 
 ]
 const bridgePoints = [
@@ -45,16 +51,16 @@ const bridgePoints = [
     [5, 9]
 ]
 
+
+
+
 const state = {
     columnNumber: 10,
     rowNumber: 10,
     cells: [],
     direction: [-1, 0],
-    duckCoord: {
-        c: 1,
-        r: 4
+    duckCoord: [1, 6]
 
-    }
 };
 
 const start = (x) => {
@@ -129,20 +135,20 @@ const render = () => {
 }
 
 function duckCurrent() {
-    return state.cells[state.duckCoord.r * 10 + state.duckCoord.c].element
+
+    return state.cells[state.duckCoord[1] * 10 + state.duckCoord[0]].element
 }
 
 const moveDuck = () => {
-    if (state.duckCoord.c >= 0 && state.duckCoord.c <= 9 && state.duckCoord.r >= 0 && state.duckCoord.r <= 9) {
+    if (state.duckCoord[0] >= 0 && state.duckCoord[0] <= 9 && state.duckCoord[1] > 0 && state.duckCoord[1] <= 9) {
         duckCurrent().classList.remove('cell--active');
-        state.duckCoord.r += state.direction[0]
-        state.duckCoord.c += state.direction[1]
-        // console.log(duckCurrent(), state.duckCoord);
+        state.duckCoord[1] += state.direction[0]
+        state.duckCoord[0] += state.direction[1]
         duckCurrent().classList.add('cell--active');
+
         duckDirection();
     }
     removeCoin();
-    gameOver()
 }
 
 
@@ -153,10 +159,10 @@ const duckDirection = () => {
         } else if (event.key == 'ArrowUp') {
             state.direction = [-1, 0]
         }
-        else if ( event.key == 'ArrowRight') {
+        else if (event.key == 'ArrowRight') {
             state.direction = [0, 1]
         }
-        else if ( event.key == 'ArrowDown') {
+        else if (event.key == 'ArrowDown') {
             state.direction = [1, 0]
         }
     });
@@ -164,32 +170,43 @@ const duckDirection = () => {
 }
 
 const removeCoin = () => {
-    for (let i = 0 ; i < coinsPoints.length; i++) {
+    for (let i = 0; i < coinsPoints.length; i++) {
         const [coinC, coinR] = coinsPoints[i];
-        if (state.duckCoord.c === coinC && state.duckCoord.r === coinR) {
+        if (state.duckCoord[0] === coinC && state.duckCoord[1] === coinR) {
             duckCurrent().classList.remove('is-coins');
             coinsPoints.splice(i, 1);
             score += 1;
-            document.getElementById('score').innerHTML = score; 
-        } 
-       
+            document.getElementById('score').innerHTML = score;
+        }
+
     }
 }
- const gameOver = () => {
-    for (let b = 0 ; b < bridgePoints.length; b++) {
-        const [bridgeC, bridgeR] = bridgePoints[b];
-            if(state.duckCoord.c === bridgeC && state.duckCoord.r === bridgeR){
-            console.log('f')
-        // document.querySelector('.page#main').classList.remove('active');
-        // document.querySelector('.page#game-over').classList.add('active');
-    }
-}}
+const checkGameOver = () => {
+    const duckInTheBounce = bridgePoints.some((point) => state.duckCoord[0] === point[0] && state.duckCoord[1] === point[1]);
+    if (!duckInTheBounce) gameOver();
+    // for (let b = 0; b < bridgePoints.length; b++) {
+    //     const [bridgeC, bridgeR] = bridgePoints[b];
+    //     if (state.duckCoord[0] === bridgeC && state.duckCoord[1] === bridgeR) {
+    //         console.log(state.duckCoord[0], state.duckCoord[1])
+            
+    //     } else {
+
+    //     }
+    // }
+}
+
+const gameOver = () => {
+    document.querySelector('.page#main').classList.remove('active');
+    document.querySelector('.page#game-over').classList.add('active');
+}
+
 const tick = () => {
-    
+
     moveDuck();
+    checkGameOver();
     render();
-    
-     setTimeout(tick, 1000);
+
+    setTimeout(tick, 1000);
 }
 
 const initListeners = () => {
