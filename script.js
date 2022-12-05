@@ -14,8 +14,7 @@ document.querySelector('div.start').addEventListener('click', () => {
         state.duckCoord = [1, 6];
         state.score = 0;
        startGame();
-        
-        
+ 
     });
     document.querySelector('div.nextLevel').addEventListener('click', () => {
         document.querySelector('.page#finish').classList.remove('active');
@@ -181,22 +180,16 @@ const mountField = () => {
     });
 }
 
-const renderCoins = () => {
+const generateCoins = () => {
     state.coinsPoints.forEach(([columnIndex, rowIndex]) => {
-        state.cells[rowIndex * state.columnNumber + columnIndex].isCoins = true;
-        state.cells.forEach((cell) => {
-            if (cell.isCoins) {
-                cell.element.classList.add('is-coins');
-            }
-        });
+    const  coinsCell = state.cells[rowIndex * state.columnNumber + columnIndex];
+    coinsCell.isCoins = true; 
+    coinsCell.element.classList.add('is-coins');
     })
 }
-
-
 const generateBridge = () => {
-
     state.bridgePoints.forEach(([columnIndex, rowIndex]) => {
-        state.cells[rowIndex * state.columnNumber + columnIndex].isBridge = true;
+    state.cells[rowIndex * state.columnNumber + columnIndex].isBridge = true;
     })
 }
 
@@ -211,20 +204,14 @@ const render = () => {
         if (cell.isBridge) {
             cell.element.classList.add('is-bridge');
         }
-        
-    });
-    state.cells.forEach((cell) => {
         if (cell.isFinish) {
             cell.element.classList.add('is-finish');
             cell.element.innerHTML = 'Finish!';
         }
-        
     });
-
 }
 
 function duckCurrent() {
-
     return state.cells[state.duckCoord[1] * 10 + state.duckCoord[0]].element
 }
 
@@ -234,14 +221,12 @@ const moveDuck = () => {
         state.duckCoord[1] += state.direction[0]
         state.duckCoord[0] += state.direction[1]
         duckCurrent().classList.add('cell--active');
-
-        duckDirection();
+       
     }
     removeCoin();
 }
-
-const duckDirection = () => {
-    window.addEventListener('keydown', function (event) {
+const initListeners  = () => {
+    window.addEventListener('keydown',  (event) => {
         if (event.key == 'ArrowLeft') {
             state.direction = [0, -1]
         } else if (event.key == 'ArrowUp') {
@@ -310,10 +295,14 @@ const startGame = () => {
     generateField();
     generateBridge();
     generateFinish();
-    renderCoins();
+    generateCoins();
     mountField();
-    duckDirection();
+    initListeners();
    
     tick();
     
 }
+// const main = () => {
+//     initListeners();
+// }
+// main();
