@@ -111,7 +111,7 @@ h1 {
 
 .page#intro {
   grid-template-columns: 1fr;
-  grid-template-rows: 150px 50px 100px 150px 150px;
+  grid-template-rows: 150px 50px 200px 150px ;
   place-items: center;
 }
 
@@ -160,6 +160,15 @@ h1 {
 }
 
 .restart {
+  text-align: center;
+  color: #ff0000;
+  font-size: 60px;
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: bold;
+  border: 2px solid black;
+  border-radius: 50%;
+}
+.nextLevel{
   text-align: center;
   color: #ff0000;
   font-size: 60px;
