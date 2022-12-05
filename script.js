@@ -4,29 +4,26 @@ document.querySelector('div.start').addEventListener('click', () => {
     document.querySelector('.page#timer').classList.add('active');
     start(3);
 });
-document.querySelector('div.restart').addEventListener('click', () => {
-    document.querySelector('.page#game-over').classList.remove('active');
-    document.querySelector('.page#main').classList.add('active');
 
-    start(3);
-});
-let timer;
-let score = 0;
+// document.querySelector('div.restart').addEventListener('click', () => {
+//     document.querySelector('.page#game-over').classList.remove('active');
+//     document.querySelector('.page#main').classList.add('active');
+//     duckCurrent().classList.remove('cell--active');
+//     start(3);
+    
+//     state.duckCoord = [1,6];
+//     state.score = 0;
+//     document.getElementById('score').innerHTML = state.score;
+    
+//     renderCoins();
+//     mountField();
+//     tick();
+//     duckDirection();
+// });
 
-const coinsPoints = [
-    [5, 3],
-    [5, 4],
-    [5, 6],
-    [5, 8],
-    [5, 9],
-    [1, 1],
-    [1, 2],
-    [1, 3],
-    [1, 4],
-    [1, 5],
+const copy = (o) => JSON.parse(JSON.stringify(o));
 
-]
-const bridgePoints = [
+const BRIDGE_POINTS_FOR_LEVEL_1 = [
     [2, 1],
     [3, 1],
     [4, 1],
@@ -49,18 +46,34 @@ const bridgePoints = [
     [5, 7],
     [5, 8],
     [5, 9]
-]
+];
 
-
-
+let timer;
+let timer2;
 
 const state = {
     columnNumber: 10,
     rowNumber: 10,
     cells: [],
+    gameIsActive: true,
     direction: [-1, 0],
-    duckCoord: [1, 6]
-
+    duckCoord: [5, 8],
+    finishPoint:[5,9],
+    score: 0,
+    coinsPoints: [
+        [5, 3],
+        [5, 4],
+        [5, 6],
+        [5, 8],
+        [1, 1],
+        [1, 2], 
+        [1, 3],
+        [1, 4],
+        [1, 5],
+    
+    ],
+    bridgePoints: copy(BRIDGE_POINTS_FOR_LEVEL_1),
+    
 };
 
 const start = (x) => {
@@ -95,6 +108,7 @@ const generateField = () => {
                 isBridge: false,
                 isCoins: false,
                 isDuckling: false,
+                isFinish: false,
             }
             state.cells.push(cell);
         }
@@ -109,7 +123,7 @@ const mountField = () => {
 }
 
 const renderCoins = () => {
-    coinsPoints.forEach(([columnIndex, rowIndex]) => {
+    state.coinsPoints.forEach(([columnIndex, rowIndex]) => {
         state.cells[rowIndex * state.columnNumber + columnIndex].isCoins = true;
         state.cells.forEach((cell) => {
             if (cell.isCoins) {
@@ -119,11 +133,18 @@ const renderCoins = () => {
     })
 }
 
+
 const generateBridge = () => {
 
-    bridgePoints.forEach(([columnIndex, rowIndex]) => {
+    state.bridgePoints.forEach(([columnIndex, rowIndex]) => {
         state.cells[rowIndex * state.columnNumber + columnIndex].isBridge = true;
     })
+}
+
+const generateFinish = () => {
+    const [columnIndex,rowIndex] = state.finishPoint;
+    state.cells[rowIndex * state.columnNumber + columnIndex].isFinish = true;
+
 }
 
 const render = () => {
@@ -131,7 +152,16 @@ const render = () => {
         if (cell.isBridge) {
             cell.element.classList.add('is-bridge');
         }
+        
     });
+    state.cells.forEach((cell) => {
+        if (cell.isFinish) {
+            cell.element.classList.add('is-finish');
+            cell.element.innerHTML = 'Finish!';
+        }
+        
+    });
+
 }
 
 function duckCurrent() {
@@ -151,7 +181,6 @@ const moveDuck = () => {
     removeCoin();
 }
 
-
 const duckDirection = () => {
     window.addEventListener('keydown', function (event) {
         if (event.key == 'ArrowLeft') {
@@ -170,62 +199,75 @@ const duckDirection = () => {
 }
 
 const removeCoin = () => {
-    for (let i = 0; i < coinsPoints.length; i++) {
-        const [coinC, coinR] = coinsPoints[i];
+    for (let i = 0; i < state.coinsPoints.length; i++) {
+        const [coinC, coinR] = state.coinsPoints[i];
         if (state.duckCoord[0] === coinC && state.duckCoord[1] === coinR) {
             duckCurrent().classList.remove('is-coins');
-            coinsPoints.splice(i, 1);
-            score += 1;
-            document.getElementById('score').innerHTML = score;
+            state.coinsPoints.splice(i, 1);
+            state.score += 1;
+            document.getElementById('score').innerHTML = state.score;
         }
 
     }
 }
-const checkGameOver = () => {
-    const duckInTheBounce = bridgePoints.some((point) => state.duckCoord[0] === point[0] && state.duckCoord[1] === point[1]);
-    if (!duckInTheBounce) gameOver();
-    // for (let b = 0; b < bridgePoints.length; b++) {
-    //     const [bridgeC, bridgeR] = bridgePoints[b];
-    //     if (state.duckCoord[0] === bridgeC && state.duckCoord[1] === bridgeR) {
-    //         console.log(state.duckCoord[0], state.duckCoord[1])
-            
-    //     } else {
 
-    //     }
-    // }
+const checkFinish = () => {
+    const [columnIndex, rowIndex] = state.finishPoint;
+    console.log(state.duckCoord);
+    if (columnIndex === state.duckCoord[0] && rowIndex === state.duckCoord[1]) finish(); 
+}
+
+const checkGameOver = () => {
+    const duckInTheBounce = state.bridgePoints.some((point) => state.duckCoord[0] === point[0] && state.duckCoord[1] === point[1]);
+    if (!duckInTheBounce) gameOver();
+}
+
+const finish = () => {
+    document.querySelector('.page#main').classList.remove('active');
+    document.querySelector('.page#finish').classList.add('active');
+    // clearTimeout(timer2);
+    state.gameIsActive = false;
 }
 
 const gameOver = () => {
     document.querySelector('.page#main').classList.remove('active');
     document.querySelector('.page#game-over').classList.add('active');
+    
+    // clearTimeout(timer2);
+    state.gameIsActive = false;
+   
 }
 
 const tick = () => {
-
     moveDuck();
+    checkFinish();
     checkGameOver();
     render();
-
-    setTimeout(tick, 1000);
+    
+    if (state.gameIsActive) setTimeout(tick, 500);
+    
 }
 
-const initListeners = () => {
+// const initListeners = () => {
 
-}
+// }
 
 const startGame = () => {
-
+    state.gameIsActive = true;
     generateField();
     generateBridge();
+    generateFinish();
     renderCoins();
     mountField();
-    tick();
     duckDirection();
+
+    tick();
+    
 }
 
-const main = () => {
-    initListeners();
-}
+// const main = () => {
+//     initListeners();
+// }
 
-main();
+// main();
 
