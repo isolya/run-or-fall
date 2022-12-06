@@ -1,149 +1,55 @@
 import { LEVELS_INFO } from './script2.js';
-
-const BRIDGE_POINTS_FOR_LEVEL_1 = [
-    [2, 1],
-    [3, 1],
-    [4, 1],
-    [5, 1],
-    [6, 1],
-    [7, 1],
-    [1, 1],
-    [1, 2],
-    [1, 3],
-    [1, 4],
-    [1, 5],
-    [1, 6],
-    [1, 7],
-    [1, 8],
-    [7, 2],
-    [7, 3],
-    [6, 3],
-    [5, 3],
-    [5, 4],
-    [5, 5],
-    [5, 6],
-    [5, 7],
-    [5, 8],
-    [5, 9]
-];
-const COINS_POINTS_FOR_LEVEL_1 = [
-    [5, 3],
-    [5, 4],
-    [5, 6],
-    [5, 8],
-    [1, 1],
-    [1, 2], 
-    [1, 3],
-    [1, 4],
-    [1, 5],
-
-];
-const COINS_POINTS_FOR_LEVEL_2 = [
-    [7, 3],
-    [7, 2],
-    [5, 5],
-    [4, 5],
-    [3, 3],
-    [2, 2], 
-    [1, 3],
-    [7, 4],
-    [1, 5],
-    [7, 7],
-    [7, 8]
-
-];
-const BRIDGE_POINTS_FOR_LEVEL_2 = [
-    [1, 8],
-    [1, 7],
-    [1, 6],
-    [1, 5],
-    [1, 4],
-    [1, 3],
-    [1, 2],
-    [2, 2],
-    [3, 3],
-    [3, 2],
-    [3, 4],
-    [3, 5],
-    [4, 5],
-    [5, 5],
-    [5, 4],
-    [5, 3],
-    [5, 2],
-    [6, 2],
-    [7, 2],
-    [7, 3],
-    [7, 4],
-    [7, 5],
-    [7, 6],
-    [7, 7],
-    [7, 8],
-   
-];
-const FINISH_POINT_LEVEL_2 = [8, 8];
-const FINISH_POINT_LEVEL_1 = [5, 9];
-const DUCK_COORD_LEVEL_2 = [1, 8] ;
-const DUCK_COORD_LEVEL_1 = [5, 7];
-
 window.addEventListener('load', () => {
     console.log('Window load')
+    
     initListeners();
+
 })
-
-
-document.querySelector('div.start').addEventListener('click', () => {
+const first_start = () => {
     document.querySelector('.page#intro').classList.remove('active');
     document.querySelector('.page#timer').classList.add('active');
+    setupLevel(state, 1);
     generateField();
     mountField();
     start(3);
-});
+}
 
-    document.querySelector('div.restart').addEventListener('click', () => {
-        document.querySelector('.page#game-over').classList.remove('active');
-        document.querySelector('.page#main').classList.add('active');
-        duckCurrent().classList.remove('cell--active');
-        state.coinsPoints = copy(COINS_POINTS_FOR_LEVEL_1);
-        state.direction = [-1, 0];
-        state.duckCoord = [1, 6];
-        state.score = 0;
-        
-       startGame();
- 
-    });
-    //lv2
-    document.querySelector('div.nextLevel').addEventListener('click', () => {
-        document.querySelector('.page#finish').classList.remove('active');
-        document.querySelector('.page#main').classList.add('active');
-        duckCurrent().classList.remove('cell--active');
-        state.direction = [-1, 0];
-        setupLevel(state, 2);
-        
 
-       startGame();
-    });
+const restart =  () => {
+    document.querySelector('.page#game-over').classList.remove('active');
+    document.querySelector('.page#main').classList.add('active');
+    duckCurrent().classList.remove('cell--active');
+    state.direction = [-1, 0];
+    state.duckCoord = [1, 6];
+    state.score = 0;
+    
+   startGame();
+}
+   
+    
+ const level_2 = () => {
+    document.querySelector('.page#finish').classList.remove('active');
+    document.querySelector('.page#main').classList.add('active');
+    duckCurrent().classList.remove('cell--active');
+    state.direction = [-1, 0];
+    setupLevel(state, 2);
+   startGame();
+    }
+   
+    
 const copy = (o) => JSON.parse(JSON.stringify(o));
-
-
 let timer;
-let timer2;
-const SPEED_LEVEL_1 = 1000;
-const SPEED_LEVEL_2 = 500;
-const SPEED_LEVEL_3 =300;
 const state = {
     columnNumber: 10,
     rowNumber: 10,
     cells: [],
     gameIsActive: true,
     direction: [-1, 0],
-    duckCoord: copy(DUCK_COORD_LEVEL_1),
-    finishPoint:copy(FINISH_POINT_LEVEL_1),
     score: 0,
-    bridgePoints: copy(BRIDGE_POINTS_FOR_LEVEL_1),
-    coinsPoints: copy(COINS_POINTS_FOR_LEVEL_1),
-    speed: copy(SPEED_LEVEL_1),
+
 };
 
+console.log(LEVELS_INFO);
 const setupLevel = (state, levelNumber) => {
     const currentLevelInfo = LEVELS_INFO[levelNumber - 1];
     state.duckCoord = copy(currentLevelInfo.DUCK_COORD);
@@ -258,7 +164,6 @@ const moveDuck = () => {
         console.log(duckCurrent())
         state.duckCoord[1] += state.direction[0]
         state.duckCoord[0] += state.direction[1]
-        
     }
     removeCoin();
 }
@@ -277,7 +182,16 @@ const initListeners  = () => {
         }
         
     });
-
+    document.querySelector('div.nextLevel').addEventListener('click', () => {
+        level_2();
+    });
+    document.querySelector('div.restart').addEventListener('click', () => {
+        restart(); 
+ 
+    });
+    document.querySelector('div.start').addEventListener('click', () => {
+   first_start();
+    });
 }
 
 const removeCoin = () => {
@@ -304,8 +218,6 @@ const finish = () => {
     document.querySelector('.page#finish').classList.add('active');
 
     state.gameIsActive = false;
-   
-    
 }
 
 const checkGameOver = () => {
