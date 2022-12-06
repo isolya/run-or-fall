@@ -1,3 +1,5 @@
+import { LEVELS_INFO } from './script2.js';
+
 const BRIDGE_POINTS_FOR_LEVEL_1 = [
     [2, 1],
     [3, 1],
@@ -92,6 +94,8 @@ window.addEventListener('load', () => {
 document.querySelector('div.start').addEventListener('click', () => {
     document.querySelector('.page#intro').classList.remove('active');
     document.querySelector('.page#timer').classList.add('active');
+    generateField();
+    mountField();
     start(3);
 });
 
@@ -113,12 +117,7 @@ document.querySelector('div.start').addEventListener('click', () => {
         document.querySelector('.page#main').classList.add('active');
         duckCurrent().classList.remove('cell--active');
         state.direction = [-1, 0];
-        state.coinsPoints = copy(COINS_POINTS_FOR_LEVEL_2);
-        state.bridgePoints = copy(BRIDGE_POINTS_FOR_LEVEL_2);
-        state.duckCoord = copy(DUCK_COORD_LEVEL_2);
-        state.speed = copy(SPEED_LEVEL_2);
-        state.finishPoint = copy(FINISH_POINT_LEVEL_2);
-        state.score = 0;
+        setupLevel(state, 2);
         
 
        startGame();
@@ -144,6 +143,25 @@ const state = {
     coinsPoints: copy(COINS_POINTS_FOR_LEVEL_1),
     speed: copy(SPEED_LEVEL_1),
 };
+
+const setupLevel = (state, levelNumber) => {
+    const currentLevelInfo = LEVELS_INFO[levelNumber - 1];
+    state.duckCoord = copy(currentLevelInfo.DUCK_COORD);
+    state.finishPoint = copy(currentLevelInfo.FINISH_POINT);
+    state.bridgePoints = copy(currentLevelInfo.BRIDGE_POINTS);
+    state.coinsPoints = copy(currentLevelInfo.COINS_POINTS);
+    state.speed = copy(currentLevelInfo.SPEED);
+}
+
+const reloadField = () => {
+    state.cells.forEach((cell) => {
+        cell.isBridge = false;
+        cell.isFinish = false;
+        cell.isCoins = false;
+        cell.isDuckling = false;
+        cell.innerHTML = '';
+    });
+}
 
 const start = (x) => {
     document.getElementById('time').innerHTML = x;
@@ -199,8 +217,7 @@ const mountField = () => {
 const generateCoins = () => {
     state.coinsPoints.forEach(([columnIndex, rowIndex]) => {
     const  coinsCell = state.cells[rowIndex * state.columnNumber + columnIndex];
-    coinsCell.isCoins = true; 
-    coinsCell.element.classList.add('is-coins');
+    coinsCell.isCoins = true;
     })
 }
 const generateBridge = () => {
@@ -217,6 +234,7 @@ const generateFinish = () => {
 
 const render = () => {
     state.cells.forEach((cell) => {
+        cell.element.className = 'cell';
         if (cell.isBridge) {
             cell.element.classList.add('is-bridge');
         }
@@ -224,7 +242,11 @@ const render = () => {
             cell.element.classList.add('is-finish');
             cell.element.innerHTML = 'Finish!';
         }
+        if (cell.isCoins) {
+            cell.element.classList.add('is-coins');
+        }
     });
+    duckCurrent().classList.add('cell--active');
 }
 
 function duckCurrent() {
@@ -234,10 +256,8 @@ function duckCurrent() {
 const moveDuck = () => {
     if (state.duckCoord[0] >= 0 && state.duckCoord[0] <= 9 && state.duckCoord[1] > 0 && state.duckCoord[1] <= 9) {
         console.log(duckCurrent())
-        duckCurrent().classList.remove('cell--active');
         state.duckCoord[1] += state.direction[0]
         state.duckCoord[0] += state.direction[1]
-        duckCurrent().classList.add('cell--active');
         
     }
     removeCoin();
@@ -312,13 +332,12 @@ const tick = () => {
 }
 
 const startGame = () => {
-    state.gameIsActive = true;
-    generateField();
+    reloadField();
     generateBridge();
     generateFinish();
     generateCoins();
-    mountField();
 
+    state.gameIsActive = true;
     tick();
     
 }
