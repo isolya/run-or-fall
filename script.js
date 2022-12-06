@@ -1,38 +1,3 @@
-
-document.querySelector('div.start').addEventListener('click', () => {
-    document.querySelector('.page#intro').classList.remove('active');
-    document.querySelector('.page#timer').classList.add('active');
-    start(3);
-});
-
-    document.querySelector('div.restart').addEventListener('click', () => {
-        document.querySelector('.page#game-over').classList.remove('active');
-        document.querySelector('.page#main').classList.add('active');
-        duckCurrent().classList.remove('cell--active');
-        state.coinsPoints = copy(COINS_POINTS_FOR_LEVEL_1);
-        state.direction = [-1, 0];
-        state.duckCoord = [1, 6];
-        state.score = 0;
-       startGame();
- 
-    });
-    document.querySelector('div.nextLevel').addEventListener('click', () => {
-        document.querySelector('.page#finish').classList.remove('active');
-        document.querySelector('.page#main').classList.add('active');
-        duckCurrent().classList.remove('cell--active');
-        state.bridgePoints = 0;
-        state.coinsPoints = copy(COINS_POINTS_FOR_LEVEL_2);
-        state.bridgePoints = copy(BRIDGE_POINTS_FOR_LEVEL_2);
-        state.direction = [-1, 0];
-        state.duckCoord = copy(DUCK_COORD_LEVEL_2);
-        state.speed = copy(SPEED_LEVEL_2);
-        state.score = 0;
-
-       startGame();
-
-    });
-const copy = (o) => JSON.parse(JSON.stringify(o));
-
 const BRIDGE_POINTS_FOR_LEVEL_1 = [
     [2, 1],
     [3, 1],
@@ -111,10 +76,56 @@ const BRIDGE_POINTS_FOR_LEVEL_2 = [
     [7, 6],
     [7, 7],
     [7, 8],
-    [8, 8]
+   
 ];
-const FINISH_POINT_LEVEL_2 = [9, 8];
+const FINISH_POINT_LEVEL_2 = [8, 8];
+const FINISH_POINT_LEVEL_1 = [5, 9];
 const DUCK_COORD_LEVEL_2 = [1, 8] ;
+const DUCK_COORD_LEVEL_1 = [5, 7];
+
+window.addEventListener('load', () => {
+    console.log('Window load')
+    initListeners();
+})
+
+
+document.querySelector('div.start').addEventListener('click', () => {
+    document.querySelector('.page#intro').classList.remove('active');
+    document.querySelector('.page#timer').classList.add('active');
+    start(3);
+});
+
+    document.querySelector('div.restart').addEventListener('click', () => {
+        document.querySelector('.page#game-over').classList.remove('active');
+        document.querySelector('.page#main').classList.add('active');
+        duckCurrent().classList.remove('cell--active');
+        state.coinsPoints = copy(COINS_POINTS_FOR_LEVEL_1);
+        state.direction = [-1, 0];
+        state.duckCoord = [1, 6];
+        state.score = 0;
+        
+       startGame();
+ 
+    });
+    //lv2
+    document.querySelector('div.nextLevel').addEventListener('click', () => {
+        document.querySelector('.page#finish').classList.remove('active');
+        document.querySelector('.page#main').classList.add('active');
+        duckCurrent().classList.remove('cell--active');
+        state.direction = [-1, 0];
+        state.coinsPoints = copy(COINS_POINTS_FOR_LEVEL_2);
+        state.bridgePoints = copy(BRIDGE_POINTS_FOR_LEVEL_2);
+        state.duckCoord = copy(DUCK_COORD_LEVEL_2);
+        state.speed = copy(SPEED_LEVEL_2);
+        state.finishPoint = copy(FINISH_POINT_LEVEL_2);
+        state.score = 0;
+        
+
+       startGame();
+    });
+const copy = (o) => JSON.parse(JSON.stringify(o));
+
+
 let timer;
 let timer2;
 const SPEED_LEVEL_1 = 1000;
@@ -126,8 +137,8 @@ const state = {
     cells: [],
     gameIsActive: true,
     direction: [-1, 0],
-    duckCoord: [1, 7],
-    finishPoint:[5, 9],
+    duckCoord: copy(DUCK_COORD_LEVEL_1),
+    finishPoint:copy(FINISH_POINT_LEVEL_1),
     score: 0,
     bridgePoints: copy(BRIDGE_POINTS_FOR_LEVEL_1),
     coinsPoints: copy(COINS_POINTS_FOR_LEVEL_1),
@@ -156,13 +167,16 @@ const creatDiv = () => {
 }
 
 const generateField = () => {
+    console.log(state.cells);
+
     for (let rowIndex = 0; rowIndex < state.rowNumber; rowIndex += 1) {
         for (let columnIndex = 0; columnIndex < state.columnNumber; columnIndex += 1) {
 
             let div = creatDiv()
             const cell = {
                 element: div,
-                rowIndex, columnIndex,
+                rowIndex, 
+                columnIndex,
                 isBridge: false,
                 isCoins: false,
                 isDuckling: false,
@@ -173,8 +187,10 @@ const generateField = () => {
     }
 }
 
+
 const mountField = () => {
-    let grid = document.getElementById("main")
+    console.log('mountField');
+    const grid = document.getElementById("main")
     state.cells.forEach((cell) => {
         grid.appendChild(cell.element);
     });
@@ -217,11 +233,12 @@ function duckCurrent() {
 
 const moveDuck = () => {
     if (state.duckCoord[0] >= 0 && state.duckCoord[0] <= 9 && state.duckCoord[1] > 0 && state.duckCoord[1] <= 9) {
+        console.log(duckCurrent())
         duckCurrent().classList.remove('cell--active');
         state.duckCoord[1] += state.direction[0]
         state.duckCoord[0] += state.direction[1]
         duckCurrent().classList.add('cell--active');
-       
+        
     }
     removeCoin();
 }
@@ -248,6 +265,7 @@ const removeCoin = () => {
         const [coinC, coinR] = state.coinsPoints[i];
         if (state.duckCoord[0] === coinC && state.duckCoord[1] === coinR) {
             duckCurrent().classList.remove('is-coins');
+            duckCurrent().classList.remove('is-bridge');
             state.coinsPoints.splice(i, 1);
             state.score += 1;
             document.getElementById('score').innerHTML = state.score;
@@ -264,7 +282,10 @@ const checkFinish = () => {
 const finish = () => {
     document.querySelector('.page#main').classList.remove('active');
     document.querySelector('.page#finish').classList.add('active');
+
     state.gameIsActive = false;
+   
+    
 }
 
 const checkGameOver = () => {
@@ -297,12 +318,7 @@ const startGame = () => {
     generateFinish();
     generateCoins();
     mountField();
-    initListeners();
-   
+
     tick();
     
 }
-// const main = () => {
-//     initListeners();
-// }
-// main();
