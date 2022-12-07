@@ -1,7 +1,6 @@
-console.log('Hi');
-
 export const LEVELS_INFO = [
     {
+        CURRENT_LEVEL: 1,
         BRIDGE_POINTS: [
             [2, 1],
             [3, 1],
@@ -26,7 +25,9 @@ export const LEVELS_INFO = [
             [5, 6],
             [5, 7],
             [5, 8],
-            [5, 9]
+            [5, 9],
+            
+            
         ],
         COINS_POINTS: [
             [5, 3],
@@ -41,11 +42,12 @@ export const LEVELS_INFO = [
         
         ],
         FINISH_POINT: [5, 9],
-        DUCK_COORD: [5, 7],
+        DUCK_COORD: [1, 8],
         SPEED: 1000,
     },
 
     {
+        CURRENT_LEVEL: 2,
         COINS_POINTS : [
             [7, 3],
             [7, 2],
@@ -86,16 +88,67 @@ export const LEVELS_INFO = [
             [7, 6],
             [7, 7],
             [7, 8],
+            
            
         ],
-         FINISH_POINT: [7, 8],
-         DUCK_COORD : [1, 8] ,
+         FINISH_POINT: [1, 8],
+         DUCK_COORD : [7, 7] ,
          SPEED : 500,
         
 
     },
     {
-        SPEED_LEVEL_3 : 300,
+        CURRENT_LEVEL: 3,
+        BRIDGE_POINTS: [
+            [2, 6],
+            [2, 7],
+            [2, 5],
+            [1, 5],
+            [1, 6],
+            [1, 7],
+            [1, 8],
+            [2, 8],
+            [3, 8],
+            [4, 8],
+            [4, 7],
+            [4, 6],
+            [4, 4],
+            [4, 2],
+            [4, 3],
+            [5, 2],
+            [5, 4],
+            [5, 6],
+            [6, 2],
+            [6, 4],
+            [6, 5],
+            [6, 6],
+            [6, 8],
+            [6, 9],
+            [7, 2],
+            [7, 8],
+            [8, 2],
+            [8, 3],
+            [8, 4],
+            [8, 5],
+            [8, 6],
+            [8, 7],
+            [8, 8]  
+        ],
+        COINS_POINTS: [
+           [6, 4],
+            [6, 5],
+            [6, 6],
+            [6, 8],
+            [2, 5],
+            [1, 5],
+            [1, 6],
+            [1, 7],
+            [7, 2],  
+
+        ],
+        FINISH_POINT: [6, 9],
+        DUCK_COORD: [1, 8],
+        SPEED: 400,
     }
 
-];;
+];
