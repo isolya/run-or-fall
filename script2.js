@@ -42,7 +42,8 @@ export const LEVELS_INFO = [
         
         ],
         FINISH_POINT: [5, 9],
-        DUCK_COORD: [1, 8],
+        DUCK_COORD: [5, 8],
+        // DUCK_COORD: [1, 8],
         SPEED: 1000,
     },
 
@@ -92,7 +93,8 @@ export const LEVELS_INFO = [
            
         ],
          FINISH_POINT: [1, 8],
-         DUCK_COORD : [7, 7] ,
+         DUCK_COORD: [1, 7],
+        //  DUCK_COORD : [7, 7] ,
          SPEED : 500,
         
 
@@ -147,7 +149,8 @@ export const LEVELS_INFO = [
 
         ],
         FINISH_POINT: [6, 9],
-        DUCK_COORD: [1, 8],
+        // DUCK_COORD: [1, 8],
+        DUCK_COORD: [8, 5],
         SPEED: 400,
     }
 

@@ -11,7 +11,7 @@ const firstStart = () => {
     generateField();
     mountField();
     start(3);
-    console.log(state.currentLevel)
+    
 }
 
 
@@ -19,7 +19,6 @@ const restart =  () => {
     document.querySelector('.page#game-over').classList.remove('active');
     document.querySelector('.page#main').classList.add('active');
     getCurrentCell().element.classList.remove('cell--active');
-   
     state.direction = [-1, 0];
     setupLevel(state, state.currentLevel);
     state.score = 0;
@@ -35,11 +34,14 @@ const restart =  () => {
     state.direction = [-1, 0];
     setupLevel(state, state.currentLevel + 1);
    startGame();
+
+
     }
    
     
 const copy = (o) => JSON.parse(JSON.stringify(o));
 let timer;
+let timerTick;
 const state = {
     columnNumber: 10,
     rowNumber: 10,
@@ -47,7 +49,7 @@ const state = {
     gameIsActive: true,
     direction: [-1, 0],
     score: 0,
-    
+    gamePause: false,
 };
 
 const setupLevel = (state, levelNumber) => {
@@ -68,6 +70,7 @@ const reloadField = () => {
         cell.isCoins = false;
         cell.isDuckling = false;
         cell.element.innerHTML = '';
+        
     });
 }
 
@@ -120,16 +123,17 @@ const mountField = () => {
 }
 
 const generateEntity = () => {
-    
+    const [columnIndex,rowIndex] = state.finishPoint;
+    state.cells[rowIndex * state.columnNumber + columnIndex].isFinish = true;
+
     state.coinsPoints.forEach(([columnIndex, rowIndex]) => {
         state.cells[rowIndex * state.columnNumber + columnIndex].isCoins = true;
         
     })
+
     state.bridgePoints.forEach(([columnIndex, rowIndex]) => {
         state.cells[rowIndex * state.columnNumber + columnIndex].isBridge = true;
     })
-    const [columnIndex,rowIndex] = state.finishPoint;
-    state.cells[rowIndex * state.columnNumber + columnIndex].isFinish = true;
 }
 
 
@@ -163,20 +167,30 @@ const moveDuck = () => {
     }
     removeCoin();
 }
+
 const initListeners  = () => {
     window.addEventListener('keydown',  (event) => {
-        if (event.key == 'ArrowLeft') {
+        if (event.code == 'ArrowLeft') {
             state.direction = [0, -1]
-        } else if (event.key == 'ArrowUp') {
+        } else if (event.code == 'ArrowUp') {
             state.direction = [-1, 0]
         }
-        else if (event.key == 'ArrowRight') {
+        else if (event.code == 'ArrowRight') {
             state.direction = [0, 1]
         }
-        else if (event.key == 'ArrowDown') {
+        else if (event.code == 'ArrowDown') {
             state.direction = [1, 0]
         }
-        
+        else if (event.code == 'Space'){
+           if(state.gamePause === false){
+            clearTimeout(timerTick);
+            state.gamePause = true;
+           }
+           else if(state.gamePause === true){
+            timerTick = setTimeout(tick, state.speed);
+            state.gamePause = false;
+           }
+        }
     });
     document.querySelector('div.nextLevel').addEventListener('click', () => {
         nextLevel();
@@ -188,8 +202,24 @@ const initListeners  = () => {
     document.querySelector('div.start').addEventListener('click', () => {
    firstStart();
     });
+    document.querySelector('div.restartGame').addEventListener('click', () => {
+       
+        restartGame();
+    
+   
+         });
 }
 
+const restartGame = () => {
+    document.querySelector('.page#end-of-the-game').classList.remove('active');
+    document.querySelector('.page#timer').classList.add('active');
+    getCurrentCell().element.classList.remove('cell--active');
+    state.direction = [-1, 0];
+    setupLevel(state, 1);
+    generateField();
+    mountField();
+    start(3);
+}
 const removeCoin = () => {
     for (let i = 0; i < state.coinsPoints.length; i++) {
         const [coinC, coinR] = state.coinsPoints[i];
@@ -212,7 +242,14 @@ const checkFinish = () => {
 
 const finish = () => {
     document.querySelector('.page#main').classList.remove('active');
-    document.querySelector('.page#finish').classList.add('active');
+
+    if (state.currentLevel === 3) {
+        document.querySelector('.page#end-of-the-game').classList.add('active');
+        state.score = 0;
+        document.getElementById('score').innerHTML = state.score;
+    } else {
+        document.querySelector('.page#finish').classList.add('active');
+    }
 
     state.gameIsActive = false;
 }
@@ -236,14 +273,14 @@ const tick = () => {
     checkGameOver();
     render();
     
-    if (state.gameIsActive) setTimeout(tick, state.speed);
+    if (state.gameIsActive) 
+    timerTick = setTimeout(tick, state.speed);
     
 }
 
 const startGame = () => {
     reloadField();
     generateEntity ();
-
     state.gameIsActive = true;
     tick();
     

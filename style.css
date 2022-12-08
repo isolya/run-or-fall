@@ -138,7 +138,12 @@ h1 {
   grid-template-rows: repeat(10, 1fr);
   place-items: center;
 }
-
+.page#end-of-the-game {
+  grid-template-columns: 1fr;
+  grid-template-rows: 150px 100px 150px 100px;
+  place-items: center;
+  
+}
 
 #time {
   text-align: center;
@@ -169,6 +174,15 @@ h1 {
   border-radius: 50%;
 }
 .nextLevel{
+  text-align: center;
+  color: #ff0000;
+  font-size: 60px;
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: bold;
+  border: 2px solid black;
+  border-radius: 50%;
+}
+.restartGame{
   text-align: center;
   color: #ff0000;
   font-size: 60px;
