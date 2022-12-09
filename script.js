@@ -1,12 +1,24 @@
 import { LEVELS_INFO } from './script2.js';
 
+const pageIntro = document.querySelector('.page#intro');
+const pageTimer = document.querySelector('.page#timer');
+const pageGameOver = document.querySelector('.page#game-over');
+const pageMain = document.querySelector('.page#main');
+const pageFinish = document.querySelector('.page#finish');
+const pageEndOfTheGame = document.querySelector('.page#end-of-the-game');
+const clickNextLevel = document.querySelector('div.nextLevel');
+const clickRestart = document.querySelector('div.restart') ;
+const clickStart = document.querySelector('div.start');
+const clickRestartGame = document.querySelector('div.restartGame');
+
 window.addEventListener('load', () => {    
     initListeners();
 
 })
+
 const firstStart = () => {
-    document.querySelector('.page#intro').classList.remove('active');
-    document.querySelector('.page#timer').classList.add('active');
+    pageIntro.classList.remove('active');
+    pageTimer.classList.add('active');
     setupLevel(state, 1);
     generateField();
     mountField();
@@ -16,8 +28,8 @@ const firstStart = () => {
 
 
 const restart =  () => {
-    document.querySelector('.page#game-over').classList.remove('active');
-    document.querySelector('.page#main').classList.add('active');
+    pageGameOver.classList.remove('active');
+    pageMain.classList.add('active');
     getCurrentCell().element.classList.remove('cell--active');
     state.direction = [-1, 0];
     setupLevel(state, state.currentLevel);
@@ -25,23 +37,20 @@ const restart =  () => {
     
    startGame();
 }
-   
-    
- const nextLevel = () => {
-    document.querySelector('.page#finish').classList.remove('active');
-    document.querySelector('.page#main').classList.add('active');
+      
+const nextLevel = () => {
+    pageFinish.classList.remove('active');
+    pageMain.classList.add('active');
     getCurrentCell().element.classList.remove('cell--active');
     state.direction = [-1, 0];
     setupLevel(state, state.currentLevel + 1);
-   startGame();
+    startGame();
+}
 
-
-    }
-   
-    
 const copy = (o) => JSON.parse(JSON.stringify(o));
 let timer;
 let timerTick;
+
 const state = {
     columnNumber: 10,
     rowNumber: 10,
@@ -79,8 +88,8 @@ const start = (x) => {
     if (x <= 0) {
         clearTimeout(timer);
         document.getElementById('time').innerHTML = "Поехали!";
-        document.querySelector('.page#timer').classList.remove('active');
-        document.querySelector('.page#main').classList.add('active');
+        pageTimer.classList.remove('active');
+        pageMain.classList.add('active');
 
         startGame();
     }
@@ -114,7 +123,6 @@ const generateField = () => {
     }
 }
 
-
 const mountField = () => {
     const grid = document.getElementById("main")
     state.cells.forEach((cell) => {
@@ -135,7 +143,6 @@ const generateEntity = () => {
         state.cells[rowIndex * state.columnNumber + columnIndex].isBridge = true;
     })
 }
-
 
 const render = () => {
     state.cells.forEach((cell) => {
@@ -158,8 +165,6 @@ const getCurrentCell = () => {
     return state.cells[state.duckCoord[1] * 10 + state.duckCoord[0]];
 }
 
-
-
 const moveDuck = () => {
     if (state.duckCoord[0] >= 0 && state.duckCoord[0] <= 9 && state.duckCoord[1] >= 0 && state.duckCoord[1] <= 9) {
         state.duckCoord[1] += state.direction[0]
@@ -172,7 +177,8 @@ const initListeners  = () => {
     window.addEventListener('keydown',  (event) => {
         if (event.code == 'ArrowLeft') {
             state.direction = [0, -1]
-        } else if (event.code == 'ArrowUp') {
+        } 
+        else if (event.code == 'ArrowUp') {
             state.direction = [-1, 0]
         }
         else if (event.code == 'ArrowRight') {
@@ -183,36 +189,37 @@ const initListeners  = () => {
         }
         else if (event.code == 'Space'){
            if(state.gamePause === false){
-            clearTimeout(timerTick);
-            state.gamePause = true;
+             clearTimeout(timerTick);
+             state.gamePause = true;
            }
            else if(state.gamePause === true){
-            timerTick = setTimeout(tick, state.speed);
-            state.gamePause = false;
+             timerTick = setTimeout(tick, state.speed);
+             state.gamePause = false;
            }
         }
     });
-    document.querySelector('div.nextLevel').addEventListener('click', () => {
-        nextLevel();
+
+    clickNextLevel.addEventListener('click', () => {
+     nextLevel();
     });
-    document.querySelector('div.restart').addEventListener('click', () => {
-        restart(); 
+
+    clickRestart.addEventListener('click', () => {
+     restart(); 
  
     });
-    document.querySelector('div.start').addEventListener('click', () => {
-   firstStart();
+
+    clickStart.addEventListener('click', () => {
+     firstStart();
     });
-    document.querySelector('div.restartGame').addEventListener('click', () => {
-       
-        restartGame();
-    
-   
-         });
+
+    clickRestartGame.addEventListener('click', () => {
+     restartGame(); 
+    });
 }
 
 const restartGame = () => {
-    document.querySelector('.page#end-of-the-game').classList.remove('active');
-    document.querySelector('.page#timer').classList.add('active');
+    pageEndOfTheGame.classList.remove('active');
+    pageTimer.classList.add('active');
     getCurrentCell().element.classList.remove('cell--active');
     state.direction = [-1, 0];
     setupLevel(state, 1);
@@ -241,14 +248,14 @@ const checkFinish = () => {
 }
 
 const finish = () => {
-    document.querySelector('.page#main').classList.remove('active');
+    pageMain.classList.remove('active');
 
     if (state.currentLevel === 3) {
-        document.querySelector('.page#end-of-the-game').classList.add('active');
+        pageEndOfTheGame.classList.add('active');
         state.score = 0;
         document.getElementById('score').innerHTML = state.score;
     } else {
-        document.querySelector('.page#finish').classList.add('active');
+        pageFinish.classList.add('active');
     }
 
     state.gameIsActive = false;
@@ -260,11 +267,9 @@ const checkGameOver = () => {
 }
 
 const gameOver = () => {
-    document.querySelector('.page#main').classList.remove('active');
-    document.querySelector('.page#game-over').classList.add('active');
-    
+    pageMain.classList.remove('active');
+    pageGameOver.classList.add('active');
     state.gameIsActive = false;
-   
 }
 
 const tick = () => {

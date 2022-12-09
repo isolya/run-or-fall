@@ -39,11 +39,13 @@ export const LEVELS_INFO = [
             [1, 3],
             [1, 4],
             [1, 5],
-        
+            [2, 1],
+            [3, 1],
+            [4, 1],
+            [5, 1],
         ],
         FINISH_POINT: [5, 9],
-        DUCK_COORD: [5, 8],
-        // DUCK_COORD: [1, 8],
+        DUCK_COORD: [1, 8],
         SPEED: 1000,
     },
 
@@ -60,7 +62,10 @@ export const LEVELS_INFO = [
             [7, 4],
             [1, 5],
             [7, 7],
-           
+            [7, 3],
+            [7, 4],
+            [7, 5],
+            [7, 6],
         
         ],
         BRIDGE_POINTS : [
@@ -88,16 +93,11 @@ export const LEVELS_INFO = [
             [7, 5],
             [7, 6],
             [7, 7],
-            [7, 8],
-            
-           
+            [7, 8], 
         ],
          FINISH_POINT: [1, 8],
-         DUCK_COORD: [1, 7],
-        //  DUCK_COORD : [7, 7] ,
+         DUCK_COORD : [7, 7] ,
          SPEED : 500,
-        
-
     },
     {
         CURRENT_LEVEL: 3,
@@ -146,11 +146,15 @@ export const LEVELS_INFO = [
             [1, 6],
             [1, 7],
             [7, 2],  
-
+            [4, 7],
+            [4, 6],
+            [4, 4],
+            [4, 2],
+            [4, 3],
+            [5, 2],
         ],
         FINISH_POINT: [6, 9],
-        // DUCK_COORD: [1, 8],
-        DUCK_COORD: [8, 5],
+        DUCK_COORD: [1, 8],
         SPEED: 400,
     }
 
